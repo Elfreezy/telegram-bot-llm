@@ -1,0 +1,16 @@
+INFO:aiogram.dispatcher:Start polling
+INFO:aiogram.dispatcher:Run polling for bot @v1TestNewBot id=8520897891 - 'TestNewBot'
+INFO:__main__:message: —колько разных видео получали новые просмотры 27 но€бр€ 2025?, sql_text: 
+SELECT COUNT(DISTINCT v.id)
+FROM videos v
+JOIN video_snapshots vs ON v.id = vs.video_id
+WHERE DATE(vs.created_at) = '2025-11-27' AND vs.delta_views_count > 0;
+;
+ERROR:aiogram.dispatcher:Failed to fetch updates - TelegramNetworkError: HTTP Client says - Request timeout error
+WARNING:aiogram.dispatcher:Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8520897891)
+INFO:aiogram.event:Update id=648701904 is handled. Duration 127377 ms by bot id=8520897891
+INFO:aiogram.dispatcher:Connection established (tryings = 1, bot id = 8520897891)
+INFO:aiogram.dispatcher:Polling stopped
+ERROR:aiogram.dispatcher:Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+WARNING:aiogram.dispatcher:Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8520897891)
+INFO:aiogram.dispatcher:Polling stopped for bot @v1TestNewBot id=8520897891 - 'TestNewBot'
