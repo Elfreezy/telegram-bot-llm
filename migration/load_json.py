@@ -1,18 +1,20 @@
+import os
 import json 
 
 from config import settings
 from app.db_handler import PostgreSQLHandler 
 
+file_name = "videos.json"
+script_dir = os.path.dirname(os.path.abspath(__file__))
+file_path = os.path.join(script_dir, file_name)
 
-
-def load_json(file_name):
+def load_json(file_path: str):
     videos, videos_snap = [], []
 
-    with open(file_name, "r") as file:
+    with open(file_path, "r") as file:
         data = json.load(file)
 
         for video in data.get("videos"):
-            
             for snapshot in video.get("snapshots"):
                 videos_snap.append((snapshot))
             
@@ -24,7 +26,38 @@ def load_json(file_name):
 
 
     with PostgreSQLHandler(settings.DB_URI) as session:
-        sql_exec = """
+        sql_create_tables = """
+            CREATE TABLE videos (
+                id VARCHAR(36) primary key,
+                creator_id VARCHAR(32),
+                video_created_at TIMESTAMP,
+                views_count INT,
+                likes_count INT,
+                comments_count INT,
+                reports_count INT,
+                created_at TIMESTAMP,
+                updated_at TIMESTAMP
+            );
+
+
+            CREATE TABLE video_snapshots (
+                id VARCHAR(32) PRIMARY KEY,
+                video_id VARCHAR(36),
+                views_count INT,
+                likes_count INT,
+                comments_count INT,
+                reports_count INT,
+                delta_views_count INT,
+                delta_likes_count INT,
+                delta_comments_count INT,
+                delta_reports_count INT,
+                created_at TIMESTAMP,
+                updated_at TIMESTAMP
+            );
+        """
+        session.init_tables(sql_create_tables)
+
+        sql_insert_videos = """
             INSERT INTO videos (id, 
                         creator_id,
                         video_created_at, 
@@ -44,10 +77,9 @@ def load_json(file_name):
                     %(created_at)s,
                     %(updated_at)s)
         """
-        session.insert_rows(sql_exec, params=videos)
+        session.insert_rows(sql_insert_videos, params=videos)
 
-    with PostgreSQLHandler(settings.DB_URI) as session:
-        sql_exec = """
+        sql_insert_video_snapshots = """
             INSERT INTO video_snapshots (id, 
                         video_id,
                         views_count, 
@@ -74,8 +106,8 @@ def load_json(file_name):
                     %(updated_at)s)
         """
 
-        session.insert_rows(sql_exec, params=videos_snap)
+        session.insert_rows(sql_insert_video_snapshots, params=videos_snap)
 
 
 
-load_json("migration//videos.json")
+load_json(file_path)

@@ -1,10 +1,9 @@
 import requests
-import json
 
 from config import settings
 
 
-class OllamaHelper():
+class OllamaHelper:
     def __init__(self, url):
         self.url = url
 
@@ -83,11 +82,9 @@ class OllamaHelper():
 
                 """,
             "stream": False,
-            "temperature": 0.1, 
-            "top_p": 0.9
+            "temperature": 0.1,
+            "top_p": 0.9,
         }
         return payload
 
-
 ollama_helper = OllamaHelper(settings.LLM_URI)
-

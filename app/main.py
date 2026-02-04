@@ -1,4 +1,3 @@
-import sys
 import asyncio
 import logging
 
@@ -11,7 +10,6 @@ from aiogram.types import Message
 from app.ollama_handler import ollama_helper
 from app.db_handler import PostgreSQLHandler
 from config import settings
-
 
 TOKEN = settings.BOT_TOKEN
 logger = logging.getLogger(__name__)
@@ -44,5 +42,5 @@ async def main() -> None:
 
 
 if __name__ == "__main__":
-    logging.basicConfig(filename='sys_log.log', level=logging.INFO)
+    logging.basicConfig(filename="sys_log.log", level=logging.INFO)
     asyncio.run(main())
